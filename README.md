@@ -1,10 +1,10 @@
 # deeplabcut-social-interaction
 
-This is an application that cleans and wrangles the output from DeepLabCut and produces a CSV file containing information about rodent social interaction test. There is also a feature that allows for live video analysis of social interaction test and it can also produce a CSV file containing all the empirical information for each trial. The live video analysis feature provides a visual aid to help researchers see what is being considered sniffle bout. Additionally, the live video analysis results are highly correlated with the result given from DeepLabCut.
+This is an application that cleans and wrangles the output from DeepLabCut and produces a CSV file containing information about rodent social interaction test. There is also a feature that allows for live video analysis of social interaction test and it can also produce a CSV file containing all the empirical information for each trial. The live video analysis feature provides a visual aid to help researchers see what is being considered a sniff bout. Additionally, the live video analysis results are highly correlated with the result given from DeepLabCut.
 
 This application is adapted to the Eisch Lab's rodent social interaction protocol in which they perform a SI test on two mice within 1 trial (left and right mouse). 
 
-The original model was trained on 200 frames that spanned across 4 videos. The model was trained for 200,000 iterations and has around a 95% accuracy.
+The validated deeplabcut model was trained on 200 frames that spanned across 4 videos containing arenas side by side. Selected body points of the test mouse were ears, snout and tailpoints, with four aditional points marking the perimeter of the cage containing the social stimulus. The validated model was trained for 200,000 iterations and has around a 95% accuracy.
 
 This project was inspired by papers such as [Nagai, M., Nagai, H., Numa, C. et al. "Stress-induced sleep-like inactivity modulates stress susceptibility in mice"](https://www.nature.com/articles/s41598-020-76717-8?proof=t#citeas) and [Worley, Nicholas B., et al. “Deeplabcut Analysis of Social Novelty Preference.”](https://www.biorxiv.org/content/10.1101/736983v1)
 
@@ -47,8 +47,8 @@ This file calculates the accuracy of the model on the video by calculating the a
 ```
 ### social_interaction.py
 ```
-This file produces a CSV that contains empirical information about the social interaction test, such as sniffle count 
-and sniffle time in seconds.
+This file produces a CSV that contains empirical information about the social interaction test, such as sniff count 
+and sniff time in seconds.
 ```
 ### extract_frames.py
 ```

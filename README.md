@@ -34,8 +34,6 @@ webbrowser
 pip install opencv-python
 pip install cvzone
 pip install pandas
-pip install numpy
-pip install webbrowser
 ```
 
 ## Files

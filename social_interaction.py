@@ -61,8 +61,8 @@ def check_distance(mouse_nose_coord, enclosure_points_list, interaction_dist_pix
     return False
 
 
-def update_counters(first_col, second_col, enclosure, dist_pix, total_frames_counter, total_sniffle_frames_counter,
-                    current_sniffle_frame_counter, sniffle_counter, required_frames):
+def update_counters(first_col, second_col, enclosure, dist_pix, total_frames_counter, total_sniff_frames_counter,
+                    current_sniff_frame_counter, sniff_counter, required_frames):
     """
     Updates all the frame counters if they satisfy the conditions
     :param first_col: The column corresponding to the x position of the mouse's nose
@@ -70,38 +70,38 @@ def update_counters(first_col, second_col, enclosure, dist_pix, total_frames_cou
     :param enclosure: The list of enclosure coordinates
     :param dist_pix: The interaction distance in pixel length
     :param total_frames_counter: The total amount of frames in the video
-    :param total_sniffle_frames_counter: The total amount of sniffles frame for the mouse
-    :param current_sniffle_frame_counter: The current amount of frames going towards the sniffle requirement
-    :param sniffle_counter: The mouse's total sniffle counter
-    :param required_frames: The amount of frames needed for a sniffle bout
-    :return: An updated version of the total frame counter, the total sniffle frame counter, the current sniffle frame counter, and the sniffle counter
+    :param total_sniff_frames_counter: The total amount of sniffs frame for the mouse
+    :param current_sniff_frame_counter: The current amount of frames going towards the sniff requirement
+    :param sniff_counter: The mouse's total sniff counter
+    :param required_frames: The amount of frames needed for a sniff bout
+    :return: An updated version of the total frame counter, the total sniff frame counter, the current sniff frame counter, and the sniff counter
     """
     mouse_nose_coord = (float(first_col), float(second_col))
     # increment the total frame counter
     if not math.isnan(mouse_nose_coord[0]) and not math.isnan(mouse_nose_coord[1]):
         total_frames_counter += 1
-    # if the condition is met, increase current and total sniffle counteres
+    # if the condition is met, increase current and total sniff counters
     if check_distance(mouse_nose_coord, enclosure, dist_pix):
-        current_sniffle_frame_counter += 1
-        total_sniffle_frames_counter += 1
+        current_sniff_frame_counter += 1
+        total_sniff_frames_counter += 1
         consecutive = True
     else:
         consecutive = False
 
     # if the frames aren't consecutive, reset the counter
     if not consecutive:
-        current_sniffle_frame_counter = 0
-    # increase the sniffle counter once if the required frames is met
-    if current_sniffle_frame_counter == required_frames:
-        sniffle_counter += 1
+        current_sniff_frame_counter = 0
+    # increase the sniff counter once if the required frames is met
+    if current_sniff_frame_counter == required_frames:
+        sniff_counter += 1
 
-    return total_frames_counter, total_sniffle_frames_counter, current_sniffle_frame_counter, sniffle_counter
+    return total_frames_counter, total_sniff_frames_counter, current_sniff_frame_counter, sniff_counter
 
 
 def social_interaction(enclosure_conversion, left_enclosure_inputs, right_enclosure_inputs, time_inputs, video_inputs,
                        exp_inputs):
     """
-    A function that produces a CSV containing the total sniffles, total sniffle frames, total sniffle time, and percentage of sniffle frames and time
+    A function that produces a CSV containing the total sniffs, total sniff frames, total sniff time, and percentage of sniff frames and time
     :param enclosure_conversion: A list of enclosure measurements and interaction distance
     :param left_enclosure_inputs: A list of left enclosure coordinates
     :param right_enclosure_inputs: A list of right enclosure coordinates
@@ -163,7 +163,7 @@ def social_interaction(enclosure_conversion, left_enclosure_inputs, right_enclos
     # experiment criteria
     trial_runtime_s = int(exp_inputs.get())
     # round down for the sake of simplicity because fractional frames aren't possible
-    required_frames_for_sniffle = math.floor(video_fps * time_criteria_s)
+    required_frames_for_sniff = math.floor(video_fps * time_criteria_s)
 
     # finding directory
     file_path = filedialog.askdirectory()
@@ -176,85 +176,85 @@ def social_interaction(enclosure_conversion, left_enclosure_inputs, right_enclos
     for index, file in enumerate(files):
         df_csv = pd.read_csv(file, index_col=False)
         # left mouse counters
-        left_current_sniffle_frame_counter, left_total_sniffle_frames, left_sniffle_counter, left_total_frames = 0, 0, 0, 0
+        left_current_sniff_frame_counter, left_total_sniff_frames, left_sniff_counter, left_total_frames = 0, 0, 0, 0
         # right mouse counters
-        right_current_sniffle_frame_counter, right_total_sniffle_frames, right_sniffle_counter, right_total_frames = 0, 0, 0, 0
+        right_current_sniff_frame_counter, right_total_sniff_frames, right_sniff_counter, right_total_frames = 0, 0, 0, 0
         # left missed mouse counters
-        left_missed_current_sniffle_frame_counter, left_missed_total_sniffle_frames, left_missed_sniffle_counter, left_missed_total_frames = 0, 0, 0, 0
+        left_missed_current_sniff_frame_counter, left_missed_total_sniff_frames, left_missed_sniff_counter, left_missed_total_frames = 0, 0, 0, 0
         # right missed mouse counters
-        right_missed_current_sniffle_frame_counter, right_missed_total_sniffle_frames, right_missed_sniffle_counter, right_missed_total_frames = 0, 0, 0, 0
+        right_missed_current_sniff_frame_counter, right_missed_total_sniff_frames, right_missed_sniff_counter, right_missed_total_frames = 0, 0, 0, 0
         # other counters
         mouse_counter = 1
 
         # iterate through all the rows and update the counters
         for row in df_csv[3:].itertuples():
-            left_total_frames, left_total_sniffle_frames, \
-            left_current_sniffle_frame_counter, left_sniffle_counter = update_counters(row[14], row[15], left_enclosure,
+            left_total_frames, left_total_sniff_frames, \
+            left_current_sniff_frame_counter, left_sniff_counter = update_counters(row[14], row[15], left_enclosure,
                                                                                        distance_in_pixels,
                                                                                        left_total_frames,
-                                                                                       left_total_sniffle_frames,
-                                                                                       left_current_sniffle_frame_counter,
-                                                                                       left_sniffle_counter,
-                                                                                       required_frames_for_sniffle)
-            right_total_frames, right_total_sniffle_frames, \
-            right_current_sniffle_frame_counter, right_sniffle_counter = update_counters(row[2], row[3],
+                                                                                       left_total_sniff_frames,
+                                                                                       left_current_sniff_frame_counter,
+                                                                                       left_sniff_counter,
+                                                                                       required_frames_for_sniff)
+            right_total_frames, right_total_sniff_frames, \
+            right_current_sniff_frame_counter, right_sniff_counter = update_counters(row[2], row[3],
                                                                                          right_enclosure,
                                                                                          distance_in_pixels,
                                                                                          right_total_frames,
-                                                                                         right_total_sniffle_frames,
-                                                                                         right_current_sniffle_frame_counter,
-                                                                                         right_sniffle_counter,
-                                                                                         required_frames_for_sniffle)
-            left_missed_total_frames, left_missed_total_sniffle_frames, \
-            left_missed_current_sniffle_frame_counter, left_missed_sniffle_counter = update_counters(row[2], row[3],
+                                                                                         right_total_sniff_frames,
+                                                                                         right_current_sniff_frame_counter,
+                                                                                         right_sniff_counter,
+                                                                                         required_frames_for_sniff)
+            left_missed_total_frames, left_missed_total_sniff_frames, \
+            left_missed_current_sniff_frame_counter, left_missed_sniff_counter = update_counters(row[2], row[3],
                                                                                                      left_enclosure,
                                                                                                      distance_in_pixels,
                                                                                                      left_missed_total_frames,
-                                                                                                     left_missed_total_sniffle_frames,
-                                                                                                     left_missed_current_sniffle_frame_counter,
-                                                                                                     left_missed_sniffle_counter,
-                                                                                                     required_frames_for_sniffle)
-            right_missed_total_frames, right_missed_total_sniffle_frames, \
-            right_missed_current_sniffle_frame_counter, right_missed_sniffle_counter = update_counters(row[14], row[15],
+                                                                                                     left_missed_total_sniff_frames,
+                                                                                                     left_missed_current_sniff_frame_counter,
+                                                                                                     left_missed_sniff_counter,
+                                                                                                     required_frames_for_sniff)
+            right_missed_total_frames, right_missed_total_sniff_frames, \
+            right_missed_current_sniff_frame_counter, right_missed_sniff_counter = update_counters(row[14], row[15],
                                                                                                        right_enclosure,
                                                                                                        distance_in_pixels,
                                                                                                        right_missed_total_frames,
-                                                                                                       right_missed_total_sniffle_frames,
-                                                                                                       right_missed_current_sniffle_frame_counter,
-                                                                                                       right_missed_sniffle_counter,
-                                                                                                       required_frames_for_sniffle)
+                                                                                                       right_missed_total_sniff_frames,
+                                                                                                       right_missed_current_sniff_frame_counter,
+                                                                                                       right_missed_sniff_counter,
+                                                                                                       required_frames_for_sniff)
 
-        if left_sniffle_counter <= left_missed_sniffle_counter:
-            left_sniffle_counter = left_missed_sniffle_counter
-            left_total_sniffle_frames = left_missed_total_sniffle_frames
-        if right_sniffle_counter <= right_missed_sniffle_counter:
-            right_sniffle_counter = right_missed_sniffle_counter
-            right_total_sniffle_frames = right_missed_total_sniffle_frames
+        if left_sniff_counter <= left_missed_sniff_counter:
+            left_sniff_counter = left_missed_sniff_counter
+            left_total_sniff_frames = left_missed_total_sniff_frames
+        if right_sniff_counter <= right_missed_sniff_counter:
+            right_sniff_counter = right_missed_sniff_counter
+            right_total_sniff_frames = right_missed_total_sniff_frames
 
         # update information for each mouse
-        mouse_entry['trial_' + str(index + 1) + '_mouse_' + str(mouse_counter)] = [left_sniffle_counter,
-                                                                                   left_total_sniffle_frames,
-                                                                                   left_total_sniffle_frames / video_fps,
-                                                                                   left_total_sniffle_frames / left_total_frames * 100,
+        mouse_entry['trial_' + str(index + 1) + '_mouse_' + str(mouse_counter)] = [left_sniff_counter,
+                                                                                   left_total_sniff_frames,
+                                                                                   left_total_sniff_frames / video_fps,
+                                                                                   left_total_sniff_frames / left_total_frames * 100,
                                                                                    (
-                                                                                           left_total_sniffle_frames / video_fps) / trial_runtime_s * 100]
+                                                                                           left_total_sniff_frames / video_fps) / trial_runtime_s * 100]
 
         mouse_counter += 1
-        mouse_entry['trial_' + str(index + 1) + '_mouse_' + str(mouse_counter)] = [right_sniffle_counter,
-                                                                                   right_total_sniffle_frames,
-                                                                                   right_total_sniffle_frames / video_fps,
-                                                                                   right_total_sniffle_frames / right_total_frames * 100,
+        mouse_entry['trial_' + str(index + 1) + '_mouse_' + str(mouse_counter)] = [right_sniff_counter,
+                                                                                   right_total_sniff_frames,
+                                                                                   right_total_sniff_frames / video_fps,
+                                                                                   right_total_sniff_frames / right_total_frames * 100,
                                                                                    (
-                                                                                           right_total_sniffle_frames / video_fps) / trial_runtime_s * 100]
+                                                                                           right_total_sniff_frames / video_fps) / trial_runtime_s * 100]
 
-    sniffle_df = pd.DataFrame.from_dict(mouse_entry, orient='index',
-                                        columns=['Total Sniffles', 'Total Sniffle Frames',
-                                                 'Total Sniffle Time in Seconds',
-                                                 'Percentage of Sniffle Frames', 'Percentage of Sniffle Time'])
+    sniff_df = pd.DataFrame.from_dict(mouse_entry, orient='index',
+                                        columns=['Total Sniffs', 'Total Sniff Frames',
+                                                 'Total Sniff Time in Seconds',
+                                                 'Percentage of Sniff Frames', 'Percentage of Sniff Time'])
 
     # save to csv
     save_file_path = filedialog.asksaveasfilename(defaultextension='.csv', title='Save the file')
-    sniffle_df.to_csv(save_file_path)
+    sniff_df.to_csv(save_file_path)
 
 
 def make_social_interaction_buttons(tk, root):

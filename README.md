@@ -1,8 +1,8 @@
 # deeplabcut-social-interaction
 
-This is an application that cleans and wrangles the output from DeepLabCut and produces a CSV file containing information about rodent social interaction test. There is also a feature that allows for live video analysis of social interaction test and it can also produce a CSV file containing all the empirical information for each trial. The live video analysis feature provides a visual aid to help researchers see what is being considered a sniff bout. Additionally, the live video analysis results are highly correlated with the result given from DeepLabCut.
+This is an application that cleans and wrangles the output from pose estimation using DeepLabCut and produces a CSV file containing social exploration information from recordings of the rodent social interaction test. We include a feature that allows for live video analysis of the social interaction test and it can also produce a CSV file containing all the empirical information for each trial. The live video analysis feature provides a visual aid to help researchers see what is being considered a sniff bout. Additionally, the live video analysis results are highly correlated with the results given from DeepLabCut.
 
-This application is adapted to the Eisch Lab's rodent social interaction protocol in which they perform a SI test on two mice within 1 trial (left and right mouse). 
+At this time, this application is adapted to the Eisch Lab's rodent social interaction protocol where the SI test is performed on two laterally adjacent arenas within 1 trial where only the test mouse in each arena (left and right) arena is detected. 
 
 The validated deeplabcut model was trained on 200 frames that spanned across 4 videos containing arenas side by side. Selected body points of the test mouse were ears, snout and tailpoints, with four aditional points marking the perimeter of the cage containing the social stimulus. The validated model was trained for 200,000 iterations and has around a 95% accuracy.
 
@@ -30,6 +30,7 @@ webbrowser
 ```
 
 ## Installation
+#python 3.9 🐍
 ```
 pip install opencv-python
 pip install cvzone
@@ -39,7 +40,7 @@ pip install pandas
 ## Files
 ### main.py
 ```
-The main file that gets ran. Creates the GUI and calls on the other files for functions.
+Creates the GUI and calls on the other files for functions.
 ```
 ### accuracy.py
 ```
@@ -53,7 +54,7 @@ and sniff time in seconds.
 ### extract_frames.py
 ```
 This file extracts frames in the video to use as a reference and produces live video analysis of the social interaction
-test. Additionally, it can produce a CSV file that shows all the sniffle counts and sniffle time for all trials.
+test. Additionally, it can produce a CSV file that shows all the sniff counts and sniffle time for all trials.
 ```
 ### interaction_zone.py
 ```

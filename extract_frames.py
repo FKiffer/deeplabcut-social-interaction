@@ -21,7 +21,7 @@ def check_point(x, y, w, h, enclosure, interaction_dist):
     :param w: The width of the rectangle
     :param h: The height of the rectangle
     :param enclosure: A list containing the coordinates of the enclosure
-    :param interaction_dist: The interaction distance to meet a sniffle bout
+    :param interaction_dist: The interaction distance to meet a sniff bout
     :return: A boolean value depending if the condition was met
     """
     for point in enclosure:
@@ -31,7 +31,7 @@ def check_point(x, y, w, h, enclosure, interaction_dist):
 
 
 def update_ctr(x_start, x_end, y_start, y_end, l_range, u_range, frame, enclosure, interaction_dist, total_frames,
-               current_frames, sniffle_counter, req_frames):
+               current_frames, sniff_counter, req_frames):
     """
     Updates all the frame counter if they satisfy the conditions
     :param x_start: The starting x position
@@ -42,11 +42,11 @@ def update_ctr(x_start, x_end, y_start, y_end, l_range, u_range, frame, enclosur
     :param u_range: the upper HSV range for purple
     :param frame: The working image from OpenCV
     :param enclosure: A list of coordinates for the enclosure
-    :param interaction_dist: The interaction distance needed for a sniffle bout
-    :param total_frames: The total sniffle frame counter
+    :param interaction_dist: The interaction distance needed for a sniff bout
+    :param total_frames: The total sniff frame counter
     :param current_frames: The current frame counter
-    :param sniffle_counter: The total sniffle counter
-    :param req_frames: The amount of frames needed for a sniffle
+    :param sniff_counter: The total sniff counter
+    :param req_frames: The amount of frames needed for a sniff
     :return: An updated version of all the counters
     """
     # the specific area corresponding to the arena
@@ -74,10 +74,10 @@ def update_ctr(x_start, x_end, y_start, y_end, l_range, u_range, frame, enclosur
                 current_frames = 0
 
             if current_frames == req_frames:
-                sniffle_counter += 1
+                sniff_counter += 1
         break
 
-    return total_frames, current_frames, sniffle_counter
+    return total_frames, current_frames, sniff_counter
 
 
 def extract_one_frame(left_x_start, left_x_end, left_y_start, left_y_end):
@@ -126,7 +126,7 @@ def create_live_video(left_x_start, left_x_end, left_y_start, left_y_end, intera
     :param right_enclosure_tr: The top right corner of the right enclosure
     :param right_enclosure_bl: The bottom left corner of the right enclosure
     :param right_enclosure_br: The bottom right corner of the right enclosure
-    :param interaction_time: The interaction time required for a sniffle
+    :param interaction_time: The interaction time required for a sniff
     """
     # asking for directory path and save path
     file_path = filedialog.askdirectory()
@@ -184,11 +184,11 @@ def create_live_video(left_x_start, left_x_end, left_y_start, left_y_end, intera
 
     for index, file in enumerate(files):
         # counters
-        left_sniffle_counter = 0
-        left_sniffle_frames = 0
+        left_sniff_counter = 0
+        left_sniff_frames = 0
         left_total_frames = 0
-        right_sniffle_counter = 0
-        right_sniffle_frames = 0
+        right_sniff_counter = 0
+        right_sniff_frames = 0
         right_total_frames = 0
         frame_num = 0
 
@@ -204,31 +204,31 @@ def create_live_video(left_x_start, left_x_end, left_y_start, left_y_end, intera
             if frame is None:
                 break
 
-            left_total_frames, left_sniffle_frames, left_sniffle_counter = update_ctr(left_x_start, left_x_end,
+            left_total_frames, left_sniff_frames, left_sniff_counter = update_ctr(left_x_start, left_x_end,
                                                                                       left_y_start, left_y_end, l_range,
                                                                                       u_range, frame, l_enclosure,
                                                                                       interact_dist, left_total_frames,
-                                                                                      left_sniffle_frames,
-                                                                                      left_sniffle_counter, req_frames)
-            cvzone.putTextRect(frame, f'A1 Left Sniffle Counter: {left_sniffle_counter}', (25, 500), 1.5)
-            cvzone.putTextRect(frame, f'A1 Left Sniffle Time: {left_total_frames / int(vid_fps.get())}s', (25, 540),
+                                                                                      left_sniff_frames,
+                                                                                      left_sniff_counter, req_frames)
+            cvzone.putTextRect(frame, f'A1 Left Sniff Counter: {left_sniff_counter}', (25, 500), 1.5)
+            cvzone.putTextRect(frame, f'A1 Left Sniff Time: {left_total_frames / int(vid_fps.get())}s', (25, 540),
                                1.5)
-            cvzone.putTextRect(frame, f'A1 Left Sniffle Frames: {left_total_frames}', (25, 580), 1.5)
+            cvzone.putTextRect(frame, f'A1 Left Sniff Frames: {left_total_frames}', (25, 580), 1.5)
 
-            right_total_frames, right_sniffle_frames, right_sniffle_counter = update_ctr(right_x_start, right_x_end,
+            right_total_frames, right_sniff_frames, right_sniff_counter = update_ctr(right_x_start, right_x_end,
                                                                                          right_y_start, right_y_end,
                                                                                          l_range,
                                                                                          u_range, frame, r_enclosure,
                                                                                          interact_dist,
                                                                                          right_total_frames,
-                                                                                         right_sniffle_frames,
-                                                                                         right_sniffle_counter,
+                                                                                         right_sniff_frames,
+                                                                                         right_sniff_counter,
                                                                                          req_frames)
 
-            cvzone.putTextRect(frame, f'A2 Right Sniffle Counter: {right_sniffle_counter}', (425, 500), 1.5)
-            cvzone.putTextRect(frame, f'A2 Right Sniffle Time: {right_total_frames / int(vid_fps.get())}s', (425, 540),
+            cvzone.putTextRect(frame, f'A2 Right Sniff Counter: {right_sniff_counter}', (425, 500), 1.5)
+            cvzone.putTextRect(frame, f'A2 Right Sniff Time: {right_total_frames / int(vid_fps.get())}s', (425, 540),
                                1.5)
-            cvzone.putTextRect(frame, f'A2 Right Sniffle Frames: {right_total_frames}', (425, 580), 1.5)
+            cvzone.putTextRect(frame, f'A2 Right Sniff Frames: {right_total_frames}', (425, 580), 1.5)
             frame_num += 1
             video_out.write(frame)
         video_out.release()
@@ -293,7 +293,7 @@ def create_live_video_csv(left_x_start, left_x_end, left_y_start, left_y_end, in
     :param right_enclosure_tr: The top right corner of the right enclosure
     :param right_enclosure_bl: The bottom left corner of the right enclosure
     :param right_enclosure_br: The bottom right corner of the right enclosure
-    :param interaction_time: The interaction time required for a sniffle
+    :param interaction_time: The interaction time required for a sniff
     """
     # setting up file path
     file_path = filedialog.askdirectory()
@@ -342,11 +342,11 @@ def create_live_video_csv(left_x_start, left_x_end, left_y_start, left_y_end, in
     # iterate all the video files, update counters, and save to dictionary
     for index, file in enumerate(files):
         capture = cv.VideoCapture(filename=file)
-        left_sniffle_counter = 0
-        left_sniffle_frames = 0
+        left_sniff_counter = 0
+        left_sniff_frames = 0
         left_total_frames = 0
-        right_sniffle_counter = 0
-        right_sniffle_frames = 0
+        right_sniff_counter = 0
+        right_sniff_frames = 0
         right_total_frames = 0
         frame_num = 0
 
@@ -355,44 +355,44 @@ def create_live_video_csv(left_x_start, left_x_end, left_y_start, left_y_end, in
             if frame is None:
                 break
 
-            left_total_frames, left_sniffle_frames, left_sniffle_counter = update_ctr(left_x_start, left_x_end,
+            left_total_frames, left_sniff_frames, left_sniff_counter = update_ctr(left_x_start, left_x_end,
                                                                                       left_y_start, left_y_end, l_range,
                                                                                       u_range, frame, l_enclosure,
                                                                                       interact_dist, left_total_frames,
-                                                                                      left_sniffle_frames,
-                                                                                      left_sniffle_counter, req_frames)
-            cvzone.putTextRect(frame, f'A1 Left Sniffle Counter: {left_sniffle_counter}', (25, 500), 1.5)
-            cvzone.putTextRect(frame, f'A1 Left Sniffle Time: {left_total_frames / int(vid_fps.get())}s', (25, 540),
+                                                                                      left_sniff_frames,
+                                                                                      left_sniff_counter, req_frames)
+            cvzone.putTextRect(frame, f'A1 Left Sniff Counter: {left_sniff_counter}', (25, 500), 1.5)
+            cvzone.putTextRect(frame, f'A1 Left Sniff Time: {left_total_frames / int(vid_fps.get())}s', (25, 540),
                                1.5)
-            cvzone.putTextRect(frame, f'A1 Left Sniffle Frames: {left_total_frames}', (25, 580), 1.5)
+            cvzone.putTextRect(frame, f'A1 Left Sniff Frames: {left_total_frames}', (25, 580), 1.5)
 
-            right_total_frames, right_sniffle_frames, right_sniffle_counter = update_ctr(right_x_start, right_x_end,
+            right_total_frames, right_sniff_frames, right_sniff_counter = update_ctr(right_x_start, right_x_end,
                                                                                          right_y_start, right_y_end,
                                                                                          l_range,
                                                                                          u_range, frame, r_enclosure,
                                                                                          interact_dist,
                                                                                          right_total_frames,
-                                                                                         right_sniffle_frames,
-                                                                                         right_sniffle_counter,
+                                                                                         right_sniff_frames,
+                                                                                         right_sniff_counter,
                                                                                          req_frames)
 
-            cvzone.putTextRect(frame, f'A2 Right Sniffle Counter: {right_sniffle_counter}', (425, 500), 1.5)
-            cvzone.putTextRect(frame, f'A2 Right Sniffle Time: {right_total_frames / int(vid_fps.get())}s', (425, 540),
+            cvzone.putTextRect(frame, f'A2 Right Sniff Counter: {right_sniff_counter}', (425, 500), 1.5)
+            cvzone.putTextRect(frame, f'A2 Right Sniff Time: {right_total_frames / int(vid_fps.get())}s', (425, 540),
                                1.5)
-            cvzone.putTextRect(frame, f'A2 Right Sniffle Frames: {right_total_frames}', (425, 580), 1.5)
+            cvzone.putTextRect(frame, f'A2 Right Sniff Frames: {right_total_frames}', (425, 580), 1.5)
             # cv.imwrite(f"{save_path}/frame-{frame_num}.jpg", frame)
             frame_num += 1
-        mouse_dict['trial_' + str(index + 1) + '_mouse_1'] = [left_sniffle_counter,
+        mouse_dict['trial_' + str(index + 1) + '_mouse_1'] = [left_sniff_counter,
                                                               left_total_frames / int(vid_fps.get()), left_total_frames]
-        mouse_dict['trial_' + str(index + 1) + '_mouse_2'] = [right_sniffle_counter,
+        mouse_dict['trial_' + str(index + 1) + '_mouse_2'] = [right_sniff_counter,
                                                               right_total_frames / int(vid_fps.get()),
                                                               right_total_frames]
         capture.release()
         cv.destroyAllWindows()
     # convert the dictionary into a df and then into a CSV file
     social_interaction_df = pd.DataFrame.from_dict(mouse_dict, orient='index',
-                                                   columns=['Total Sniffles', 'Total Sniffle Time',
-                                                            'Total Sniffle Frames'])
+                                                   columns=['Total Sniffs', 'Total Sniff Time',
+                                                            'Total Sniff Frames'])
     save_path = filedialog.asksaveasfilename(defaultextension='.csv', title='save the file')
     social_interaction_df.to_csv(save_path)
 
